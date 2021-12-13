@@ -13,8 +13,8 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">FlightSurety</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
-            aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </nav>
@@ -22,9 +22,30 @@
     <main class="container">
 
         <div id="display-wrapper" class="top-20">
+          
+        </div>
+
+        <div class="row top-20">                
+            <label>Registered Airlines:</label><select id="airlinesForFund"></select> <btn class="btn btn-primary" id="query-funded-airline">Query Funded Amount</btn>
         </div>
         <div class="row top-20">
-            <label class="form">Flight</label> <input type="text" id="flight-number"> <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
+            <label class="form">Register Airline:</label>
+            Airline address:<input type="text" id="airline-address">
+            <btn class="btn btn-primary" id="submit-register-airline">Register Airline</btn>
+        </div>
+        <div class="row top-20">
+            <label class="form">Fund Airline:</label>
+            <label>Amount:</label><input type="text" id="fund-airline">
+            <btn class="btn btn-primary" id="submit-fund-airline">Fund Airline</btn>
+        </div>
+        <div class="row top-20">
+            <label class="form">Flights:</label><select id="registeredFlights"></select> <btn class="btn btn-primary" id="query-flight-info">Query Flight Info</btn>
+        </div>
+        <div class="row top-20">
+            <label class="form">Register Flight:</label><label class="form">Flight Number: </label> <input type="text" id="flight-number">
+            <label class="form">Timestamp:<input type="text" id="flight-time"></label>                        
+            <btn class="btn btn-primary" id="submit-register-flight">Register Flight</btn>
+            <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
         </div>
     </main>
 
