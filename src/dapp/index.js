@@ -17,24 +17,61 @@ import './flightsurety.css';
 
         contract.fetchRegisteredAirlineAddresses((error, result) => {
             result.forEach(airline => {
-                displayAirlineAddress(airline, DOM.elid("airlinesForFund"));                
+                displayList(airline, airline, DOM.elid("airlinesForFund"));
+            });
+        });
+        contract.fetchActivatedAirlineAddresses((error, result) => {
+            console.log('fetchActivatedAirlineAddresses',error, result);
+            if (!error) {
+                result.forEach(airline => {
+                    displayList(airline, airline, DOM.elid("activatedAirlines"));
+                });
+            }
+        });
+        getFlightKeys();
+
+        DOM.elid('query-funded-insurance').addEventListener('click', () => {
+            let flight = DOM.elid('registeredFlights').value;
+            // Write transaction
+            contract.getFundedInsuranceAmount(flight, (error, amount, claimAmount) => {
+
+                alert(`You already bought ${amount} ether, claimAmount is ${claimAmount}`);
             });
         });
 
-        contract.getFlightKeys((error, result)=>{
-            result.forEach(flight => {
-                displayAirlineAddress(flight, DOM.elid("registeredFlights"));                
+        DOM.elid('withdraw').addEventListener('click', () => {
+            let flight = DOM.elid('registeredFlights').value;
+            // Write transaction
+            contract.withdraw((error, result) => {
+                if (!error)
+                    alert(`You withdrawed from ${flight} successfully`);
             });
-        })
+        });
+        DOM.elid('withdrawable').addEventListener('click', () => {
+
+            contract.getWithdrawableInsurance((error, result) => {
+                if (!error)
+                    alert(`You withdrawed from ${flight} successfully`);
+            });
+        });
+        DOM.elid('buy-insurance').addEventListener('click', () => {
+            let flight = DOM.elid('registeredFlights').value;
+            let amount = DOM.elid('insurance-amount').value;
+            // Write transaction
+            contract.buyInsurance(flight, amount, (error, result) => {
+                console.log('buyInsurance', error, result);
+            });
+        });
 
         // Register an Airline
         DOM.elid('submit-register-airline').addEventListener('click', () => {
-            let registeredAirline = DOM.elid('airline-address').value;
+            let airlineAddress = DOM.elid('airline-address').value;
+            let airlineName = DOM.elid('airline-name').value;
             // Write transaction
-            contract.registerAirline(registeredAirline, (error, result) => {
-                console.log('registerAirline',error, result);
+            contract.registerAirline(airlineAddress,airlineName, (error, result) => {
+                console.log('registerAirline', error, result);
                 if (!error) {
-                    displayAirlineAddress(registeredAirline, DOM.elid("airlinesForFund"));                 
+                    displayList(airlineAddress, airlineAddress, DOM.elid("airlinesForFund"));
                 }
             });
         })
@@ -43,8 +80,12 @@ import './flightsurety.css';
             let flightNumber = DOM.elid('flight-number').value;
             let flightTime = DOM.elid('flight-time').value;
             // Write transaction
-            contract.registerFlight(flightNumber,flightTime, (error, result) => {
-                console.log('registerFlight', error, result)
+            contract.registerFlight(flightNumber, flightTime, (error, result) => {
+                if (!error) {
+                    getFlightKeys();
+                    return;
+                }
+                console.log(error);
             });
         })
 
@@ -52,7 +93,15 @@ import './flightsurety.css';
             let flightKey = DOM.elid('registeredFlights').value;
             // Write transaction
             contract.getFlightByKey(flightKey, (error, result) => {
-                console.log('getFlightByKey', error, result)
+                const { airline, flightNumber, isRegistered, statusCode, timestamp } = result
+                alert(`Airline: ${airline} \nFlight number: ${flightNumber} \nTimestamp: ${timestamp} \nStatusCode: ${statusCode}`)
+            });
+        })
+        DOM.elid('fetch-flight-status').addEventListener('click', () => {
+            let flightKey = DOM.elid('registeredFlights').value;
+            // Write transaction
+            contract.fetchFlightStatus(flightKey, (error, result) => {
+                console.log('fetchFlightStatus', error, result);
             });
         })
 
@@ -62,19 +111,22 @@ import './flightsurety.css';
             let fundAirlineValue = DOM.elid('fund-airline').value;
             // Write transaction
             contract.fundAirline(fundAirlineValue, (error, result) => {
-                console.log('fundAirline', error, result)
+                
+                console.log('fundAirline', error, result);
+                
+                if (!error) {
+                    emptyChild(DOM.elid("activatedAirlines"))
+                    contract.fetchActivatedAirlineAddresses((error, result) => {
+                        result.forEach(airline => {
+                            displayList(airline, airline, DOM.elid("activatedAirlines"));
+                        });
+                    });
+                }
             });
         })
-        // User-submitted transaction
-        DOM.elid('submit-oracle').addEventListener('click', () => {
-            let flight = DOM.elid('flight-number').value;
-            // Write transaction
-            contract.fetchFlightStatus(flight, (error, result) => {
-                displayOperationStatus('Oracles', 'Trigger oracles', [{ label: 'Fetch Flight Status', error: error, value: result.flight + ' ' + result.timestamp }]);
-            });
-        })
+
         DOM.elid('query-funded-airline').addEventListener('click', () => {
-            let flight = DOM.elid('airlinesForFund').value;
+            let flight = DOM.elid('activatedAirlines').value;
 
             contract.fetchFundByAirline(flight, (error, result) => {
                 alert(`fund by airline ${result} ether`)
@@ -82,12 +134,23 @@ import './flightsurety.css';
         })
     });
 
-
+    function getFlightKeys() {
+        contract.getFlightKeys((error, result) => {
+            emptyChild(DOM.elid("registeredFlights"));
+            result.forEach(flight => {
+                displayList(flight, flight, DOM.elid("registeredFlights"));
+            });
+        })
+    }
 })();
-function displayAirlineAddress(airline, parentEl) {
-    let el = document.createElement("option");
-    el.text = airline;
-    el.value = airline;
+function emptyChild(parentEl) {
+    parentEl.innerHTML = '';
+}
+
+function displayList(txt, value, parentEl) {
+    let el = DOM.option();
+    el.text = txt;
+    el.value = value;
     parentEl.add(el);
 }
 

@@ -76,3 +76,8 @@ Deploy the contents of the ./dapp folder
 * [Solidity Language Reference](http://solidity.readthedocs.io/en/v0.4.24/)
 * [Ethereum Blockchain Explorer](https://etherscan.io/)
 * [Web3Js Reference](https://github.com/ethereum/wiki/wiki/JavaScript-API)
+
+
+```
+ganache-cli -p 9545 -l 999999999 -m "fade attack defense sound nothing riot rug aim cigar embody until check" -a 50 -e 1000000
+```

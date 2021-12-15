@@ -23,7 +23,7 @@ async function registerOracles() {
     await flightSuretyApp.methods.registerOracle().send({
       from: accounts[i],
       value: REGISTRATION_FEE,
-      gas: 6721975
+      gas: 999999999
     });
   }
 }
@@ -31,29 +31,20 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-// uint8 private constant STATUS_CODE_UNKNOWN = 0;
-// uint8 private constant STATUS_CODE_ON_TIME = 10;
-// uint8 private constant STATUS_CODE_LATE_AIRLINE = 20;
-// uint8 private constant STATUS_CODE_LATE_WEATHER = 30;
-// uint8 private constant STATUS_CODE_LATE_TECHNICAL = 40;
-// uint8 private constant STATUS_CODE_LATE_OTHER = 50;
-//        uint8 index,
-//        address airline,
-//        string flight,
-//        uint256 timestamp,
-//        uint8 statusCode
 async function submitOracleResponse(airline, flight, timestamp) {
   for (var i = 0; i < oracles.length; i++) {
     //generate random response
     var statusCode = getRandomInt(5) * 10;
+    // var statusCode = 20;
     var indexes = await flightSuretyApp.methods.getMyIndexes().call({ from: oracles[i] });
     for (var j = 0; j < indexes.length; j++) {
       try {
         await flightSuretyApp.methods.submitOracleResponse(
           indexes[j], airline, flight, timestamp, statusCode
-        ).send({ from: oracles[i] });
+        ).send({ from: oracles[i], gas: 999999999 });
       } catch (e) {
-        console.log('submitOracleResponse error: ', e);
+        console.log('error submitOracleResponse', indexes[j], airline, flight, timestamp, statusCode)
+        // console.log('submitOracleResponse error: ', e);
       }
     }
   }
@@ -61,9 +52,8 @@ async function submitOracleResponse(airline, flight, timestamp) {
 
 function eventsListener() {
   console.log('================================= START eventsListener=================================')
-  flightSuretyApp.events.AirlineFunded({}, debuggerEventListener)  
+
   flightSuretyApp.events.DebuggerEvent({}, debuggerEventListener)
-  flightSuretyApp.events.AirlineRegistered({}, airlineReisteredListener)
   flightSuretyApp.events.FlightStatusInfo({}, flightStatusInfoListener);
   flightSuretyApp.events.OracleReport({}, oracleReportListener);
   flightSuretyApp.events.OracleRegistered({}, oracleRegisteredListener);
@@ -74,8 +64,7 @@ function eventsListener() {
 flightSuretyApp.events.OracleRequest({
   fromBlock: 0
 }, function (error, event) {
-  if (error) console.log(error)
-  console.log(event)
+  logEvent(error, event);
 });
 
 function debuggerEventListener(err, contractEvent) {
@@ -106,7 +95,7 @@ async function oracleRequestListener(err, contractEvent) {
 }
 function logEvent(err, contractEvent) {
   if (err) {
-    console.error('flightStatusInfoListener error: ', err);
+    console.error('logEvent error: ', err);
     return;
   }
   const {

@@ -22,30 +22,49 @@
     <main class="container">
 
         <div id="display-wrapper" class="top-20">
-          
-        </div>
 
-        <div class="row top-20">                
-            <label>Registered Airlines:</label><select id="airlinesForFund"></select> <btn class="btn btn-primary" id="query-funded-airline">Query Funded Amount</btn>
+        </div>
+        <div class="row top-20">
+            <label>Registered Airlines:</label><select id="airlinesForFund"></select>
+        </div>
+        <div class="row top-20">            
+            <label>Activated Airlines:</label><select id="activatedAirlines"></select>&nbsp;&nbsp;
+            <btn class="btn btn-primary" id="query-funded-airline">Query Funded Amount</btn>
         </div>
         <div class="row top-20">
             <label class="form">Register Airline:</label>
-            Airline address:<input type="text" id="airline-address">
+            <input type="text" id="airline-address" placeholder="Airline Address">
+
+            <input type="text" id="airline-name" placeholder="Airline Name">
+
             <btn class="btn btn-primary" id="submit-register-airline">Register Airline</btn>
         </div>
         <div class="row top-20">
             <label class="form">Fund Airline:</label>
-            <label>Amount:</label><input type="text" id="fund-airline">
+            <input type="text" id="fund-airline" placeholder="Amount In Ether">
             <btn class="btn btn-primary" id="submit-fund-airline">Fund Airline</btn>
         </div>
         <div class="row top-20">
-            <label class="form">Flights:</label><select id="registeredFlights"></select> <btn class="btn btn-primary" id="query-flight-info">Query Flight Info</btn>
+            <label class="form">Flights:</label><select id="registeredFlights"></select>
         </div>
         <div class="row top-20">
-            <label class="form">Register Flight:</label><label class="form">Flight Number: </label> <input type="text" id="flight-number">
-            <label class="form">Timestamp:<input type="text" id="flight-time"></label>                        
-            <btn class="btn btn-primary" id="submit-register-flight">Register Flight</btn>
-            <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
+            <btn class="btn btn-primary" id="query-flight-info">Query Flight Info</btn>
+            &nbsp;&nbsp;<btn class="btn btn-primary" id="fetch-flight-status">Fetch Flight Status From Oracle</btn>
+            &nbsp;&nbsp;<btn class="btn btn-primary" id="query-funded-insurance">Query Insurance Amount</btn>
+        </div>
+        <div class="row top-20">
+            <label>Amount:</label><input type="text" placeholder="Amount In Ether" id="insurance-amount">
+            <btn class="btn btn-primary" id="buy-insurance">Buy Insurance</btn>
+        </div>
+        <div class="row top-20">
+            <btn class="btn btn-primary" id="withdrawable">Query Withdrawable</btn>&nbsp;&nbsp;
+            <btn class="btn btn-primary" id="withdraw">Withdraw</btn>
+        </div>
+        <div class="row top-20">
+            <label class="form">Register Flight:</label><label class="form">Flight Number: </label> <input type="text"
+                id="flight-number">
+            <label class="form">Timestamp:<input type="text" id="flight-time"></label>
+            <btn class="btn btn-primary" id="submit-register-flight">Register Flight</btn>        
         </div>
     </main>
 
